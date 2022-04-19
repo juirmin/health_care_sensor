@@ -16,22 +16,24 @@ app.config.from_object(configs)
 socketio = SocketIO(app)  # 加上這行
 start_time = 0
 time_count = False
-
+time_out = 0
 @socketio.on('start')
 def start():
+    playsound('請開始良測')
     global start_time
     global time_count
     time_count = True
     start_time = int(time.time())
     while time_count:
         time.sleep(1)
-        if(int(time.time())-start_time >= 10):
+        if(int(time.time())-start_time >= time_out):
             playsound('請開始良測')
             start_time = int(time.time())
 
 @socketio.on('temperature')
 def temperature():
-    playsound('請開始良測')
+    global time_out
+    time_out = 10
     while True:
         try:
             fdk300 = FDK300()
@@ -45,6 +47,8 @@ def temperature():
             pass
 @socketio.on('oxygen')
 def m170():
+    global time_out
+    time_out = 30
     while True:
         try:
             m170 = M170()
@@ -57,6 +61,8 @@ def m170():
                 break
         except:
             pass
+
+        
 @socketio.on('end')
 def the_end():
     global time_count
