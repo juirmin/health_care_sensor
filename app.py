@@ -16,6 +16,7 @@ app.config.from_object(configs)
 socketio = SocketIO(app)  # 加上這行
 start_time = 0
 time_count = False
+
 @socketio.on('start')
 def start():
     global start_time
@@ -23,8 +24,10 @@ def start():
     time_count = True
     start_time = int(time.time())
     while time_count:
-        if(int(time.time())-time.time() >= 10):
+        time.sleep(1)
+        if(int(time.time())-start_time >= 10):
             playsound('請開始良測')
+            start_time = int(time.time())
 
 @socketio.on('temperature')
 def temperature():
