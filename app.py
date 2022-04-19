@@ -43,7 +43,20 @@ def temperature():
                 break
         except:
             pass
-
+@socketio.on('oxygen')
+def m170():
+    while True:
+        try:
+            m170 = M170()
+            sensor_data = {'oxygen': 0, 'pulse': 0}
+            _temp = m170.get_sensor_data()
+            sensor_data['oxygen'] = _temp['oxygen']
+            sensor_data['pulse'] = _temp['pulse']
+            if(sensor_data['oxygen']!=0):
+                socketio.send(["oxygen",sensor_data["oxygen"],sensor_data["pulse"]])
+                break
+        except:
+            pass
 @socketio.on('end')
 def the_end():
     global time_count
