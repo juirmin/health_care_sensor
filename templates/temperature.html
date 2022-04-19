@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>ITLAB</title>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"
+        integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+      function docReady(fn) {
+        // see if DOM is already available
+        if (
+          document.readyState === "complete" ||
+          document.readyState === "interactive"
+        ) {
+          // call on next available tick
+          setTimeout(fn, 1);
+        } else {
+          document.addEventListener("DOMContentLoaded", fn);
+        }
+      }
+      var uuid = "";
+      docReady(function () {
+        var socket = io.connect();
+        let resultContainer = document.getElementById("qr-reader-results");
+        let lastResult,
+          countResults = 0;
+        let temperature = 0;
+        socket.on("message", function (data) {
+		if(data[0]=='temperature'){
+                  $('#temperature').text(data[1]);
+		  socket.emit('end')
+		}
+		else if(data[0]=='end'){
+		  window.location.reload()
+		}
+            });
+        function onScanSuccess(decodedText, decodedResult) {
+          console.log(`Scan result ${decodedText}`, decodedResult);
+          axios({
+            method: "post",
+            url: "http://api-dev.huakai.com.tw/api/2.3/health-care/auth",
+            data: { token: decodedResult.decodedText },
+          }).then(function (response) {
+            $("#username").text(response.data.data.username);
+            $("#telephone").text(response.data.data.telephone);
+            $("#birthday").text(response.data.data.birthday);
+            $("#sex").text(response.data.data.sex);
+            $("#email").text(response.data.data.email);
+            uuid = response.data.data.uuid;
+            $("#profile").css('display','flex')
+            socket.emit('temperature')
+html5QrcodeScanner.clear();
+console.log('start')
+          });
+        }
+        var html5QrcodeScanner = new Html5QrcodeScanner("qr-reader", {
+          fps: 1,
+          qrbox: 500,
+        });
+        html5QrcodeScanner.render(onScanSuccess);
+      });
+    </script>
+    <style>
+      * {
+        margin: 0;
+        border: 0;
+      }
+      body {
+        overflow: hidden;
+      }
+      .profile {
+        width: 100vw;
+        height: 100vh;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: white !important;
+        position: absolute;
+        font-size: 10vw;
+        z-index:10;
+      }
+      .qrcode {
+        position: absolute;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .qrcode div {
+        width: 50vw;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div style="display: none;">
+        <div id="username"></div>
+        <div id="telephone"></div>
+        <div id="birthday"></div>
+        <div id="sex"></div>
+        <div id="email"></div>
+      </div>
+    <div id="profile" class="profile">
+        <p>體溫：</p><p id="temperature"></p>
+    </div>
+      <div class="qrcode">
+        <div id="qr-reader" />
+      </div>
+    </div>
+  </body>
+
+</html>

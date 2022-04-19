@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>WebSocket test</title>
+
+    <!-- JQuery 的 CDN 連結 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Socket.IO 的 CDN 連結 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.2.0/socket.io.js"
+        integrity="sha512-WL6WGKMPBiM9PnHRYIn5YEtq0Z8XP4fkVb4qy7PP4vhmYQErJ/dySyXuFIMDf1eEYCXCrQrMJfkNwKc9gsjTjA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- Socket.IO 的使用 -->
+    <script type="text/javascript" charset="utf-8">
+        $(document).ready(function () {
+            // Socket.IO Start connect
+            var socket = io.connect();
+            // Socket.IO get test	    
+            socket.on("message", function (data) {
+                $('#temperature').text(data);
+                console.log(data)
+            });
+
+            // Socket.IO send test
+            $("#test").click(function (e) {
+                socket.emit('temperature')
+            });
+        });
+    </script>
+</head>
+
+
+<body>
+	<input type="button" id="test" name="test" />
+    <div id='temperature'></div>
+</body>
+</html>

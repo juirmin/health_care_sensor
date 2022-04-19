@@ -29,6 +29,7 @@ class FDK300:
                 temperateure = int(_temp, 16)/100
                 if temperateure < 50:
                     result['temperature'] = str(temperateure)
+                    print(result)
                     return result
 
         return result
