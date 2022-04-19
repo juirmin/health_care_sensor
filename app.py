@@ -8,11 +8,23 @@ from flask_socketio import SocketIO  # 加上這行
 import configs
 import time
 from TTS import playsound
+import time
 
 app = Flask(__name__)
 app.config.from_object(configs)
 
 socketio = SocketIO(app)  # 加上這行
+start_time = 0
+time_count = False
+@socketio.on('start')
+def start():
+    global start_time
+    global time_count
+    time_count = True
+    start_time = int(time.time())
+    while time_count:
+        if(int(time.time())-time.time() >= 10):
+            playsound('請開始良測')
 
 @socketio.on('temperature')
 def temperature():
@@ -30,7 +42,9 @@ def temperature():
             pass
 
 @socketio.on('end')
-def temperature():
+def the_end():
+    global time_count
+    time_count = False
     playsound('良測結束')
     time.sleep(5)
     socketio.send(["end"])

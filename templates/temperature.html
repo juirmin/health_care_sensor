@@ -56,6 +56,7 @@
             uuid = response.data.data.uuid;
             $("#profile").css('display','flex')
             socket.emit('temperature')
+            socket.emit('start')
 html5QrcodeScanner.clear();
 console.log('start')
           });
