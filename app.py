@@ -19,7 +19,8 @@ time_count = False
 time_out = 0
 @socketio.on('start')
 def start():
-    playsound('請開始良測')
+    print('start')
+    playsound('認證成功請開始良測')
     global start_time
     global time_count
     time_count = True
@@ -33,7 +34,7 @@ def start():
 @socketio.on('temperature')
 def temperature():
     global time_out
-    time_out = 10
+    time_out = 30
     while True:
         try:
             fdk300 = FDK300()
@@ -48,7 +49,7 @@ def temperature():
 @socketio.on('oxygen')
 def m170():
     global time_out
-    time_out = 30
+    time_out = 40
     while True:
         try:
             m170 = M170()
@@ -82,7 +83,7 @@ def fdk400():
 @socketio.on('weight')
 def mtka1():
     global time_out
-    time_out = 20
+    time_out = 30
     while True:
         try:
             scale = MTKA1()
@@ -101,8 +102,9 @@ def the_end():
     time_count = False
     playsound('良測結束')
     time.sleep(5)
+    print('end')
     socketio.send(["end"])
-@ app.route('/')
+@app.route('/')
 def index():
     return render_template(str(modeset())+'.html')
 
