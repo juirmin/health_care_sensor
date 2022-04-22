@@ -62,7 +62,39 @@ def m170():
         except:
             pass
 
-        
+@socketio.on('pressure_S')
+def fdk400():
+    global time_out
+    time_out = 120
+    while True:
+        try:
+            fdk400 = FDK400()
+            _temp = fdk400.get_sensor_data()
+            sensor_data = {'pressure_S': 0, 'pressure_D': 0}
+            sensor_data['pressure_S'] = _temp['pressure_S']
+            sensor_data['pressure_D'] = _temp['pressure_D']
+            if(sensor_data['pressure_S']!=0):
+                socketio.send(["pressure_S",sensor_data["pressure_S"],sensor_data["pressure_D"]])
+                break
+        except:
+            pass
+
+@socketio.on('weight')
+def mtka1():
+    global time_out
+    time_out = 20
+    while True:
+        try:
+            scale = MTKA1()
+            sensor_data = {'weight': 0}
+            _temp = scale.get_sensor_data()
+            sensor_data['weight'] = _temp['weight']
+            if sensor_data["weight"]!=0:
+                socketio.send(["weight",sensor_data["weight"]])
+                break
+        except:
+            pass
+
 @socketio.on('end')
 def the_end():
     global time_count

@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>oxygen ITLAB</title>
+    <title>pressure_S ITLAB</title>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
@@ -31,11 +31,11 @@
         let resultContainer = document.getElementById("qr-reader-results");
         let lastResult,
           countResults = 0;
-        let oxygen = 0;
+        let pressure_S = 0;
         socket.on("message", function (data) {
-		if(data[0]=='oxygen'){
-                  $('#oxygen').text(data[1]);
-                  $('#pulse').text(data[2]);
+		if(data[0]=='pressure_S'){
+                  $('#pressure_S').text(data[1]);
+                  $('#pressure_D').text(data[2]);
 		  socket.emit('end')
 		}
 		else if(data[0]=='end'){
@@ -56,7 +56,7 @@
             $("#email").text(response.data.data.email);
             uuid = response.data.data.uuid;
             $("#profile").css('display','flex')
-            socket.emit('oxygen')
+            socket.emit('pressure_S')
             socket.emit('start')
             html5QrcodeScanner.clear();
           });
@@ -111,8 +111,8 @@
         <div id="email"></div>
       </div>
     <div id="profile" class="profile" style="flex-direction: column;">
-      <div style="display:flex;flex-direction: row;"><p>血氧 : </p><p id="oxygen" style="font-size: 11.5vw;"></p></div>
-       <div style="display:flex;flex-direction: row;"><p>脈搏 : </p><p id="pulse" style="font-size: 11.5vw;"></p></div>
+      <div style="display:flex;flex-direction: row;"><p>血氧 : </p><p id="pressure_S" style="font-size: 11.5vw;"></p></div>
+       <div style="display:flex;flex-direction: row;"><p>脈搏 : </p><p id="pressure_D" style="font-size: 11.5vw;"></p></div>
     </div>
       <div class="qrcode">
         <div id="qr-reader" />
