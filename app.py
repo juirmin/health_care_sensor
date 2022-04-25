@@ -108,8 +108,12 @@ def the_end():
 def index():
     mode = 'weight.html'
     try:
-        mode = str(modeset())+'.html'
+        mode = str(modeset('/media/pi/HEALTH/set.yml'))+'.html'
     except:
+        try:
+            mode = str(modeset('/media/pi/HEALTH1/set.yml'))+'.html'
+        except:
+            pass
         pass
     return render_template(mode)
 
