@@ -106,7 +106,12 @@ def the_end():
     socketio.send(["end"])
 @app.route('/')
 def index():
-    return render_template(str(modeset())+'.html')
+    mode = 'weight.html'
+    try:
+        mode = str(modeset())+'.html'
+    except:
+        pass
+    return render_template(mode)
 
 
 if __name__ == '__main__':
