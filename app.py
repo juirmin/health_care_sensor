@@ -26,7 +26,7 @@ def start():
     time_count = True
     start_time = int(time.time())
     while time_count:
-        time.sleep(1)
+        time.sleep(10)
         if(int(time.time())-start_time >= time_out):
             playsound('請開始良測')
             start_time = int(time.time())
@@ -49,7 +49,7 @@ def temperature():
 @socketio.on('oxygen')
 def m170():
     global time_out
-    time_out = 40
+    time_out = 60
     while True:
         try:
             m170 = M170()
@@ -83,7 +83,7 @@ def fdk400():
 @socketio.on('weight')
 def mtka1():
     global time_out
-    time_out = 30
+    time_out = 60
     while True:
         try:
             scale = MTKA1()
