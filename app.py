@@ -27,7 +27,7 @@ def start():
     start_time = int(time.time())
     while time_count:
         time.sleep(10)
-        if(int(time.time())-start_time >= time_out):
+        if((int(time.time())-start_time >= time_out) and time_count):
             playsound('請開始良測')
             start_time = int(time.time())
 
